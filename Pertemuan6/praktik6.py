@@ -23,23 +23,6 @@ q1_female = [140, 200, 180]
 q2_male = [170, 190, 176]
 q2_female = [130, 210, 160]
 
-# 1 Grafik Stacked Vertical Bar Chart
-st.subheader("1.  Stacked Vertical Bar Chart")
-
-fig, ax = plt.subplots()
-x = np.arange(len(stores))
-ax.bar(x, male, label='Male', color='blue')
-ax.bar(x, female, bottom=male, label='female', color='pink')
-
-ax.set_title('Population by Gender and Store')
-ax.set_xlabel('Stores')
-ax.set_ylabel('Population')
-ax.set_xticklabels(stores)
-ax.set_xticks(x)
-ax.legend()
-
-st.pyplot(fig)
-
 
 # 2 Grafik Stacked Vertical Bar Chart
 st.subheader("2.  Stacked Vertical Bar Chart dengan Matplotlib")
