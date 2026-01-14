@@ -2,37 +2,29 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# =====================
-# PAGE CONFIG
-# =====================
+
 st.set_page_config(
     page_title="Analisis Kinerja Akademik Siswa",
     layout="wide"
 )
 
-# =====================
-# LOAD DATA
-# =====================
+
 @st.cache_data
 def load_data():
-    return pd.read_csv("performa_siswa.csv", sep=";")  # sesuaikan nama file CSV
+    return pd.read_csv("performa_siswa.csv", sep=";")  
 
 df = load_data()
 
 
-# =====================
-# TITLE
-# =====================
+
 st.title("Analisis Perbedaan Kinerja Akademik Siswa")
-st.subheader("Berdasarkan Jenis Sekolah (Negeri dan Swasta)")
+st.subheader("Berdasarkan Jenis Sekolah (Negeri dan Swasta) Kelompok 21")
 st.write(
     "Dashboard ini menyajikan analisis perbedaan kinerja akademik siswa "
     "berdasarkan jenis sekolah menggunakan visualisasi dasar."
 )
 
-# =====================
-# SIDEBAR FILTER
-# =====================
+
 st.sidebar.header("Filter Data")
 
 school_filter = st.sidebar.multiselect(
@@ -50,12 +42,10 @@ gender_filter = st.sidebar.multiselect(
 
 filtered_df = df[
     (df["school_type"].isin(school_filter)) &
-    (df["gender"].isin(gender_filter))
+    (df["gender"].isin(gender_filter)) 
 ]
 
-# =====================
-# KPI
-# =====================
+
 col1, col2, col3 = st.columns(3)
 
 col1.metric("Jumlah Siswa", len(filtered_df))
@@ -64,9 +54,7 @@ col3.metric("Rata-rata Jam Belajar", round(filtered_df["study_hours"].mean(), 2)
 
 st.divider()
 
-# =====================
-# VISUAL 1: BAR CHART
-# =====================
+
 st.subheader("Rata-rata Overall Score per Jenis Sekolah")
 
 avg_score = filtered_df.groupby("school_type")["overall_score"].mean()
@@ -80,9 +68,7 @@ ax.set_title("Rata-rata Kinerja Akademik Siswa")
 st.pyplot(fig)
 st.caption("Insight: Terdapat perbedaan rata-rata kinerja akademik antara sekolah negeri dan swasta.")
 
-# =====================
-# VISUAL 2: BOXPLOT
-# =====================
+
 st.subheader("Distribusi Overall Score")
 
 fig, ax = plt.subplots()
@@ -95,9 +81,7 @@ plt.suptitle("")
 st.pyplot(fig)
 st.caption("Insight: Boxplot menunjukkan perbedaan median dan sebaran nilai antar jenis sekolah.")
 
-# =====================
-# VISUAL 3: SCATTER PLOT
-# =====================
+
 st.subheader("Jam Belajar vs Kinerja Akademik")
 
 fig, ax = plt.subplots()
@@ -113,9 +97,7 @@ ax.legend()
 st.pyplot(fig)
 st.caption("Insight: Jam belajar yang lebih tinggi cenderung diikuti kinerja akademik yang lebih baik.")
 
-# =====================
-# VISUAL 4: HISTOGRAM
-# =====================
+
 st.subheader("Distribusi Overall Score")
 
 fig, ax = plt.subplots()
@@ -127,9 +109,7 @@ ax.set_title("Distribusi Nilai Overall Score")
 st.pyplot(fig)
 st.caption("Insight: Sebaran nilai akademik siswa menunjukkan variasi performa.")
 
-# =====================
-# VISUAL 5: PIE CHART
-# =====================
+
 st.subheader("Proporsi Siswa Berdasarkan Jenis Sekolah")
 
 school_count = filtered_df["school_type"].value_counts()
@@ -143,13 +123,7 @@ ax.pie(
 )
 ax.set_title("Proporsi Siswa Negeri dan Swasta")
 
-st.pyplot(fig)
-st.caption("Insight: Komposisi siswa berdasarkan jenis sekolah.")
-
-# =====================
-# VISUAL 6: HEATMAP (MATPLOTLIB)
-# =====================
-st.subheader("Korelasi Variabel Akademik")
+fig, ax = plt.subplots()
 
 corr_cols = [
     "math_score",
@@ -162,8 +136,7 @@ corr_cols = [
 
 corr = filtered_df[corr_cols].corr()
 
-fig, ax = plt.subplots()
-cax = ax.matshow(corr)
+cax = ax.matshow(corr, cmap="coolwarm")
 fig.colorbar(cax)
 
 ax.set_xticks(range(len(corr_cols)))
@@ -171,6 +144,9 @@ ax.set_yticks(range(len(corr_cols)))
 ax.set_xticklabels(corr_cols, rotation=45, ha="left")
 ax.set_yticklabels(corr_cols)
 
+ax.set_title("Korelasi Antar Variabel Akademik", pad=20)
+
 st.pyplot(fig)
 st.caption("Insight: Overall score memiliki korelasi kuat dengan nilai mata pelajaran dan kehadiran.")
+
 
